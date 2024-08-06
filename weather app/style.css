@@ -1,0 +1,118 @@
+*{
+margin: 0;
+padding: 0;
+font-family: 'Poppins', sans-serif;
+box-sizing: border-box;
+}  /*these CSS proprerties are applicable for all html element-->*/
+
+body{
+    background: #222; /*background color*/
+}
+
+.card{
+    width: 90%;
+    max-width: 470px;
+    background: linear-gradient(135deg,#00feba,#5b548a); /*BG color*/
+    /*background: linear-gradient(135deg,#f4d4de,#e84b8a); /*BG color*/
+    color: #fff; /*txt color*/
+    margin: 100px auto 0; /*100 px from top, 0 from bottom, left-right auto*/
+    border-radius: 20px; /*makes corners round*/
+    padding: 40px 35px; /*space inside the card*/
+    text-align: center; 
+}
+
+.search{
+    width:100%;
+    display:flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/*the input field and search button will be sligned horizontally side by side*/
+
+.search input{
+    border: 0;
+    outline: 0;
+    background: #ebfffc;
+    color:#555;
+    padding: 10px 25px;
+    height: 60px;
+    border-radius: 30px;
+    flex: 1;
+    /*In CSS, flex: 1 is a shorthand for setting the flex-grow, flex-shrink, and flex-basis properties of a 
+    flex item.
+
+    when you set flex: 1, you're essentially telling the flex item to grow to fill available space, shrink to 
+    avoid overflow, and start with no extra space based on its content.
+    */
+    margin-right: 16px;
+    font-size: 18px;
+}
+
+.search button{
+    border: 0;
+    outline: 0;
+    background: #ebfffc;
+    border-radius: 50%; /*circle*/
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+}
+
+.search button img{
+    width: 16px;
+}
+
+.weather-icon{
+    width: 170px;
+    margin-top:30px;
+}
+
+.weather h1{
+    font-size: 80px;
+    font-weight: 500;
+}
+
+.weather h2{
+    font-size: 45px;
+    font-weight: 400;
+    margin-top: -10px;
+}
+
+.details{
+    display:flex; /*because we have to create two collumns*/
+    align-items: center;
+    justify-content: space-between; 
+    /*The CSS property justify-content: space-between; is used within a flex container to distribute space 
+    between flex items. */
+    padding: o 20px; /*20 px from left and right side*/
+    margin-top:50px;
+}
+
+.col{
+    display:flex;
+    align-items: center;
+    text-align: left;
+}
+
+.col img{
+    width:40px;
+    margin-right: 10px;
+}
+
+.humidity, .wind{
+    font-size: 28px;
+    margin-top: -6px;
+}
+
+.weather{
+    display: none;
+}
+
+.error{
+    text-align: left;
+    margin-left: 10px;;
+    font-size: 14px;
+    margin-top: 10px;
+    display:none
+}

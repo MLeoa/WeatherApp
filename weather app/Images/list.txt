@@ -1,0 +1,9 @@
+clear
+clouds
+dizzle
+humidity
+mist
+rain
+search
+snow
+wind

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="style.css"> <!-- this link connects HTML and CSS files-->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+
+<div class="card"> <!-- kind of a frame iside the window containing all the content --> <!--card - classname-->
+    <div class = "search"> <!-- a box containing inout field and search--> <!--search - classname-->
+        <input type="text" placeholder="enter city name"
+        spellcheck="false">
+        <button><img src="images/search.png"></button>
+    </div>
+    <div class = "error">  
+    <p>Invalid city name</p>
+    </div>
+
+    <div class="weather">
+        <img src="images/rain.png" class="weather-icon"> <!--weather icon-->
+        <h1 class="temp">22°C</h1> <!--temperature icon-->
+        <h2 class="city">New York</h2>
+    
+        <div class="details"> <!--we're creating two dollumns inside-->
+
+            <div class="col">
+            <img src="Images/humidity.png">
+                <div>
+                <p class="humidity">50%</p>
+                <p>Humidity</p>
+                </div>
+            </div>
+
+            <div class="col">
+            <img src="Images/wind.png">
+                <div>
+                <p class="wind">15 km/h</p>
+                <p>Wind Speed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const apiKey = "9d3be740a398f598512ded705e342767";
+    const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+    const searchBox = document.querySelector(".search input");
+    const searchBtn = document.querySelector(".search button");
+    const weatherIcon = document.querySelector(".weather-icon")
+    const cardElement = document.querySelector(".card");
+
+    /*
+    document.querySelector is a method in JavaScript used to select the first element within the 
+    document that matches a specified CSS selector or group of selectors. It returns the first matching 
+    element, or null if no matches are found.
+    
+    1. document: This represents the entire HTML document.
+    2. querySelector: This is a method of the document object.
+    
+    */
+
+    async function checkWeather(city){
+    /*
+    An async function in JavaScript is a special type of function that allows you to write asynchronous code 
+    in a more readable and convenient way, using the async and await keywords. It simplifies the process of 
+    working with promises and makes asynchronous code look more like synchronous code.
+    
+    async function myAsyncFunction() {
+    // Asynchronous code here
+    const result = await somePromise;
+    return result;
+    }
+
+    Key Points
+    Defining an Async Function:
+    An async function is defined using the async keyword before the function declaration.
+
+    Returning a Promise:
+    An async function always returns a promise. If the function returns a value, the promise is resolved with 
+    that value. If the function throws an error, the promise is rejected with that error.
+
+    Using the await Keyword:
+    Inside an async function, you can use the await keyword to pause the execution of the function until a 
+    promise is resolved or rejected. This allows you to work with the result of the promise as if it were a 
+    synchronous operation.
+    */
+        const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
+
+        /*
+        The fetch function in JavaScript is used to make HTTP requests to servers and retrieve data. 
+        It is part of the modern JavaScript API and is designed to work with promises, which makes it easier 
+        to work with asynchronous operations.
+
+        fetch(url, options)
+         */
+
+        if(response.status == 404){
+            document.querySelector(".error").style.display = "block"   
+            document.querySelector(".weather").style.display = "none"  
+        } else {
+
+            var data = await response.json();
+
+
+            /*
+            -The checkWeather function is declared as async, allowing the use of await inside it.
+
+            -await fetch(apiUrl + city + &appid=${apiKey}) pauses the function execution until the fetch 
+            request completes.
+            
+            -await response.json() pauses the function execution until the JSON parsing is complete.
+            
+            -The code handles both the successful response and the 404 error case gracefully.
+            */
+
+        console.log(data);
+
+        // Get sunrise and sunset times in milliseconds
+         const sunrise = data.sys.sunrise * 1000;
+        const sunset = data.sys.sunset * 1000;
+        const currentTime = Date.now();
+
+        // Determine if it's day or night
+        const isDayTime = currentTime >= sunrise && currentTime < sunset;
+        
+        // Update the DOM with the weather data
+        document.querySelector(".city").innerHTML = data.name;
+        document.querySelector(".temp").innerHTML = Math.round(data.main.temp) + '°C';
+        document.querySelector(".humidity").innerHTML = data.main.humidity + '%';
+        document.querySelector(".wind").innerHTML = data.wind.speed + ' km/h';
+
+       // Select the appropriate weather icon based on day or night
+        const weatherCondition = data.weather[0].main.toLowerCase();
+        let iconPath = "images/";
+
+        if (isDayTime) {
+            if (weatherCondition == 'clouds') {
+                iconPath += "day_clouds.png";
+            } else if (weatherCondition == 'clear') {
+                iconPath += "day_clear.png";
+            } else if (weatherCondition == 'rain') {
+                iconPath += "day_rain.png";
+            } else if (weatherCondition == 'drizzle') {
+                iconPath += "day_drizzle.png";
+            } else if (weatherCondition == 'mist') {
+                iconPath += "day_mist.png";
+            } else if (weatherCondition == 'fog') {
+                iconPath += "day_fog.png;"
+            }
+            cardElement.style.background = "linear-gradient(135deg, #00feba, #5b548a)"; // Day color
+        } else {
+            if (weatherCondition == 'clouds') {
+                iconPath += "night_clouds.png";
+            } else if (weatherCondition == 'clear') {
+                iconPath += "night_clear.png";
+            } else if (weatherCondition == 'rain') {
+                iconPath += "night_rain.png";
+            } else if (weatherCondition == 'drizzle') {
+                iconPath += "night_drizzle.png";
+            } else if (weatherCondition == 'mist') {
+                iconPath += "night_mist.png";
+            } else if (weatherCondition == 'fog') {
+                iconPath += "night_fog.png;"
+            }
+            cardElement.style.background = "linear-gradient(135deg, #1e3c72, #2a5298)"; // Night color
+        }
+
+        weatherIcon.src = iconPath;
+
+        /*The line weatherIcon.src = iconPath; is setting the src attribute of the weatherIcon image 
+        element to the value of iconPath. Here's a detailed explanation:*/
+
+
+        /*if(data.weather[0].main == 'Clouds'){
+            weatherIcon.src = "images/clouds.png"
+        }
+        else if(data.weather[0].main == 'Clear'){
+            weatherIcon.src = "images/clear.png"
+        } 
+        else if(data.weather[0].main == 'Rain'){
+            weatherIcon.src = "images/rain.png"
+        }
+        else if(data.weather[0].main == 'Dizzle'){
+            weatherIcon.src = "images/dizzle.png"
+        }
+        if(data.weather[0].main == 'Mist'){
+            weatherIcon.src = "images/mist.png"
+        }*/
+
+        document.querySelector(".weather").style.display = "block";
+         //changes weather display from none to display
+         document.querySelector(".error").style.display = "none" 
+        }
+
+        
+    }
+
+    searchBtn.addEventListener("click", ()=>{ //arrow function calls checkweather
+         checkWeather(searchBox.value); // returns city name to checkWeather f-tion
+    })
+   
+
+    searchBox.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+            checkWeather(searchBox.value);
+        }
+    }); 
+    /* This will make the search button active when the Enter key is pressed, in addition to being clicked 
+    with the mouse.*/
+</script>
+</body>
+
+</html>
